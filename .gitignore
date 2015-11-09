@@ -1,0 +1,11 @@
+*.pdf
+**/*.asv
+**/*.cls
+**/*.aux
+**/*.log
+**/*.syntex.gz
+**/*.png
+**/*.nav
+**/*.out
+**/*.snm
+**/*.toc

@@ -1,0 +1,191 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% baposter Landscape Poster
+% LaTeX Template
+% Version 1.0 (11/06/13)
+%
+% baposter Class Created by:
+% Brian Amberg (baposter@brian-amberg.de)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[landscape,a0paper,fontscale=0.285]{baposter} % Adjust the font scale/size here
+
+\usepackage{graphicx} % Required for including images
+\graphicspath{{figures/}} % Directory in which figures are stored
+
+\usepackage{amsmath} % For typesetting math
+\usepackage{amssymb} % Adds new symbols to be used in math mode
+
+\usepackage{booktabs} % Top and bottom rules for tables
+\usepackage{enumitem} % Used to reduce itemize/enumerate spacing
+\usepackage{palatino} % Use the Palatino font
+\usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
+
+\usepackage{multicol} % Required for multiple columns
+\setlength{\columnsep}{1.5em} % Slightly increase the space between columns
+\setlength{\columnseprule}{0mm} % No horizontal rule between columns
+
+\usepackage{tikz} % Required for flow chart
+\usetikzlibrary{shapes,arrows} % Tikz libraries required for the flow chart in the template
+
+\newcommand{\compresslist}{ % Define a command to reduce spacing within itemize/enumerate environments, this is used right after \begin{itemize} or \begin{enumerate}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+}
+
+\definecolor{lightblue}{rgb}{0.145,0.6666,1} % Defines the color used for content box headers
+
+\begin{document}
+
+\begin{poster}
+{
+headerborder=closed, % Adds a border around the header of content boxes
+colspacing=1em, % Column spacing
+bgColorOne=white, % Background color for the gradient on the left side of the poster
+bgColorTwo=white, % Background color for the gradient on the right side of the poster
+borderColor=lightblue, % Border color
+headerColorOne=black, % Background color for the header in the content boxes (left side)
+headerColorTwo=lightblue, % Background color for the header in the content boxes (right side)
+headerFontColor=white, % Text color for the header text in the content boxes
+boxColorOne=white, % Background color of the content boxes
+textborder=roundedleft, % Format of the border around content boxes, can be: none, bars, coils, triangles, rectangle, rounded, roundedsmall, roundedright or faded
+eyecatcher=true, % Set to false for ignoring the left logo in the title and move the title left
+headerheight=0.1\textheight, % Height of the header
+headershape=roundedright, % Specify the rounded corner in the content box headers, can be: rectangle, small-rounded, roundedright, roundedleft or rounded
+headerfont=\Large\bf\textsc, % Large, bold and sans serif font in the headers of content boxes
+%textfont={\setlength{\parindent}{1.5em}}, % Uncomment for paragraph indentation
+linewidth=2pt % Width of the border lines around content boxes
+}
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION 
+%----------------------------------------------------------------------------------------
+%
+
+{\bf\textsc{Factorial Hidden Markov Model}\vspace{0.5em}} % Poster title
+{\textsc{ENNAFII Oussama  \hspace{12pt} ENS Cachan}} % Author names and institution
+
+
+%----------------------------------------------------------------------------------------
+%	Introduction
+%----------------------------------------------------------------------------------------
+
+\headerbox{Introduction}{name=introduction,column=0,row=0}{
+
+\begin{itemize}
+	\item Hidden Markov Models (HMM) are widely used as learning models for time series data (such an application is speech recognition modeling).
+	\item A generalisation of this model is what we call factorial(distributed HMM).
+	\item In this framework, the hidden state variable is actually a vector of multiple state variables.
+	\item A practical example where it comes handy to use this model, is when the sound recorded comes from multiple sources and we want to recognize separatly the two sounds.
+\end{itemize}
+\vspace{0.3em}
+}
+
+\headerbox{The Model}{name=model,column=0,below=introduction}{ % This block's bottom aligns with the bottom of the conclusion block
+	\begin{center}
+		\includegraphics[width=0.8\linewidth]{FHMM}
+		\captionof{figure}{The FHMM represented as a DAG}
+	\end{center}
+	
+	The factorial model is represented by:
+	$$
+	P((S_t,Y_t),\forall t)=P(S_1)P(Y_1|S_1)$$$$\prod_{t=2,...,T}P(S_t|S_{t-1})P(Y_t|S_t)
+	$$
+	
+}
+
+\headerbox{Assumptions}{name=assum,column=1}{
+	The DAG associated to FHMM means that:
+	\begin{equation}
+	P(S_t|S_{t-1})=\prod_{m=1,...,M} P(S_t^{(m)}|S_{t-1}^{(m)})
+	\end{equation}
+	We further suppose that the emission probabilities are guassian with linear combinations of the means of each substate:
+	\begin{equation}
+	P(Y_t|S_t)=\mathscr{N}(Y_t,\sum_{m=1...M} W^{(m)}S_t^{(m)},C)
+	\end{equation}
+	}
+	
+	\headerbox{Inference}{name=infere,column=1,below=assum}{
+		We use the EM algorithm to infere the hidden variables and to learn the parameters.
+		In the M step we get:
+		\begin{equation}
+		W^{new}=(\sum_{t=1,\dots,T}Y_t<S_t^*>)(\sum_{t=1,\dots,T}<S_tS_t^*>)^{\dagger}
+		\end{equation}
+		\begin{equation}
+		\pi^{(m)\ new}=<S_t^{(m)}>
+		\end{equation}
+		\begin{equation}
+		P_{i,j}^{(m)\ new}=\frac{\sum_{t=2,\dots,T}<S_{t,i}^{(m)}S_{t,j}^{(m)}>}{\sum_{t=2,\dots,T}<S_{t,j}^{(m)}>}
+		\end{equation}
+		\begin{equation}
+		C^{new}=\frac{1}{T}(\sum_{t=1..T}Y_tY_t^*-\sum_{t,m}W^{(m)}<S_t^{(m)}>Y_t^*)
+		\end{equation}
+		}
+
+\headerbox{The Exact Inference:}{name=exact,column=1,below=infere,bottomaligned=model}{
+	We get through Forward-Backward algorithm:
+	$$P(S_t|\{Y_{\tau}\}_1^T,\phi)=\frac{\alpha_t(S_t)\beta_t(S_t)}{\sum_{S_t}\alpha_t(S_t)\beta_t(S_t)}$$
+	We deduce the means from this probability distribution.This methods complexity is:
+	$O(TMK^{M+1})$
+	}
+	
+\headerbox{Variational Inference:}{name=var,column=2,row=0}{
+	In the variational inference, instead of calculating$P(S_t|\{Y_{\tau}\}_1^T,\phi)$ (which is intractable), we approach it with parametrerized probabilities. There are two ways to do it:\\
+		The completely factorised distribution, where all the states are decoupled multinomial distributions:
+		$$Q((S_t)_t)=\prod_{t=1,\dots,T}\prod_{m=1,\dots,M}\prod_{S_t=1,\dots,K}(\theta_{t,k}^{(m)})^{S_t^{(m)}}$$
+The minimization of the Kullback-Leibler divergence in this case yields:
+		$$\theta_{t}^{(m)}=f(\phi,\theta_{t-1}^{(m)},\theta_{t+1}^{(m)},(\theta_{t}^{(n)})_{n\neq m})$$
+		This scheme converges rapidly ($\approx 10$ iterations). The means are easy to get formaly since each state variable is a multinomial distribution .
+}
+	
+\headerbox{Structured variational Inference:}{name=strucvar,column=3,row=0,bottomaligned=var}{
+		The structured distribution:
+		$$Q(S_t)\propto \prod_{m=1..M}Q(S_1^{(m)}|h)\prod_{t=1..T}Q(S_t^{(m)}|S_{t-1}^{(m)},h)$$
+		with:
+		$$Q(S_t^{(m)}|S_{t-1}^{(m)},h)=\prod_{k=1..K}(h_{t,k}^{(m)}\prod_{j=1..K}(P_{k,j}^{(m)})^{S_{t-1}^{(m)}})$$
+		Now $h$ has the role of emission probabilities. We keep the Markov property while decoupling the chains.
+		We get another fixed point equation:
+		$$h_{t}^{(m)}=g(\phi,(h_{t}^{(n)})_{n\neq m})$$
+		Once the scheme converges, we use the forward backward algorithm. The computational complexity of the last step is : $O(TMK^2)$
+	}
+
+\headerbox{ Numerical results :}{name=num,column=2,span=2,below=var,bottomaligned=infere}{
+	\begin{multicols}{2}
+		\vspace{1em}
+		We generate artificially unidimensional data using a Factorial HMM with random transition matrices, priors and means. We set $C=0.005$,$ K=2$ and $M=3$. We repeat the process 20 times, we get this table reprensenting the loglikelihood per time (divided by $T$):
+		
+		\begin{tabular}{|l|c|r|}
+			\hline
+			Algorithm & Training Set & Test set \\
+			\hline
+			Naive & $1.28$ & $1.11$ \\
+			Exact & $2.32$ & $1.43$ \\
+			Variational & $1.56$ & $1.29$ \\
+			\hline
+		\end{tabular}
+		
+		
+	\end{multicols}
+	}
+	
+	\headerbox{Conclusion :}{name=conc,column=2,span=2,below=num,bottomaligned=model}{
+		\ \\
+		\begin{itemize}
+			\item  The direct exact E step is intractable when there are too many sources (for big $M$)
+			\item The Variational E step is less greedy w.r.t computational complexity. It is a nice tractable method comparing to the naive or the exact ones.
+		\end{itemize}
+		}
+
+\end{poster}
+
+\end{document}
